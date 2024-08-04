@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+<form action="/salvar_lista" method="post">
+    <div  class="input-field" >
+      <input  type="text" id="lista" name="lista" required>
+      <label for="lista">lista</label>
+    <button type="submit" class="waves-effect waves-light btn">salvar</button>
+    </div>
+</form>
+ 
+<ul>
+{% for list in lista %}
+     <li> 
+      <form action="/check" method="post" style="display:inline;">
+        <input type="hidden" name="id" value="{{ list.id }}">
+        <label>
+          <input type="checkbox" id="id" name="feita" {% if list.feita %} checked {% endif %} onchange="this.form.submit()"/>
+          <span {% if lista.feita %} {% endif %}>{{ list.lista }}</span>
+      </form>
+
+          <form action="/delete"method="post">
+            <button class="waves-effect waves-light btn-small red" type="submit">
+              <i class="material-icons right">delete</i>
+          </button>
+          <input type="hidden" name="lista" value="{{list.lista}}">
+          </form>
+
+        </label>
+        
+       
+    </li>
+
+     <li>
+      
+    </li>
+
+{% endfor %}
+</ul>
+ 
+
+{% endblock %} 
