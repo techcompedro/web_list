@@ -8,12 +8,37 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <style>
-     
-      li span {
-          flex-grow: 1;
-          color: #000000;
-          
-      }
+      /* estilo.css */
+
+.lista {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.item-lista {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+.checkbox-container {
+  flex: 1;
+}
+
+.acoes-container {
+  flex: 1;
+  text-align: right;
+}
+
+.acoes-container button {
+  margin-left: 10px;
+}
+li span {
+  flex-grow: 1;
+  color: #000000;
+}
 
   </style>
   </head>
@@ -33,19 +58,17 @@
         
     
     
- 
-<script>
-   document.addEventListener('DOMContentLoaded', function() {
-    var elems = document.querySelectorAll('.dropdown-trigger');
-    var instances = M.Dropdown.init(elems, options);
-  });
 
-  // Or with jQuery
 
-  $('.dropdown-trigger').dropdown();
-</script>
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+<script>  document.addEventListener('DOMContentLoaded', function() {
+  var elems = document.querySelectorAll('.modal');
+  var instances = M.Modal.init(elems);
+});
+</script>
+    
 </body>
 </html>
