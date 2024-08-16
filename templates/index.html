@@ -1,40 +1,111 @@
 {% extends 'base.html' %}
 {% block content %}
-<form action="/salvar_lista" method="post">
-    <div  class="input-field" >
-      <input  type="text" id="lista" name="lista" required>
-      <label for="lista">lista</label>
-    <button type="submit" class="waves-effect waves-light btn">salvar</button>
+
+
+        <!-- Card à esquerda -->
+        <div class="col-md-4">
+            <div class="card" style="width: 200px; height: 30rem; right: 110px;">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        Total de Tarefas:
+                        <div class="circle">
+                            <h1>{{ total }}</h1>
+                        </div>
+                    </h5>
+                    <h5 class="card-title">
+                        Total de Tarefas concluidas:
+                        <div class="circle">
+                            <h1>{{ feita_true }}</h1>
+                        </div>
+                    </h5>
+                    <h5 class="card-title">
+                        Total de tarefas pendentes:
+                        <div class="circle">
+                            <h1>{{ feita_false }}</h1>
+                        </div>
+                    </h5> 
+                </div>
+            </div>
+        </div>
+        
+        <!-- Formulário à direita -->
+        <div class="col-md-8" style="margin-top: -480px;">
+            <form action="/adicionar_lista" method="post" class="form-container">
+                <div class="input-group mb-3">
+                    <input type="text" id="lista" name="lista"  class="form-control" placeholder="Digite sua nova tarefa:" required>
+                    <input type="text" id="descricao" name="descricao" class="form-control" placeholder="Descrição:">
+                    <input type="date" id="data" name="data" class="form-control" placeholder="Data:">
+                    <button style="left: 10px;" class="glow-on-hover btn btn-outline-danger" type="submit">Salvar</button>
+                </div>
+            </form><br/>
+        </div>
+        <form action="/exibir_lista" method="POST">
+            <div class="btn-group" role="group" style="margin-top: 30px; left: 110px; color: red;">
+                <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown">
+                  Exibir lista
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <button class="dropdown-item" type="submit" name="lista" value="lista_hoje">
+                            Tarefas de hoje
+                        </button>
+                    </li>
+                    <li>
+                        <button class="dropdown-item" type="submit" name="lista" value="lista_mes">
+                            Tarefas deste mês
+                        </button>
+                    </li>
+                    <li>
+                        <button class="dropdown-item" type="submit" name="lista" value="lista_ano">
+                            Tarefas deste ano
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </form>
+        
+        <!-- Aqui você pode exibir a lista renderizada -->
+    
+
+<div class="form-container" style="width: 1000px;  margin-top: 30px;">
+    <div class="row">
+            <!-- Lista de tarefas -->
+            {% for listas in lista %}
+            <div class="minha-lista mb-2">
+                <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        
+                        <div class="checkbox-container">
+                            <form action="/check" method="post" style="display:inline;">
+                              <input type="hidden" name="id" value="{{ listas.id }}">
+                              <label>
+                                <input type="checkbox" id="id" name="feita" {% if listas.feita %} checked {% endif %} onchange="this.form.submit()"/>
+                                <span {% if listas.feita %} style="text-decoration-line: Line-through;text-decoration-color: red;"  {% endif %}> 
+                                        {{ listas.lista }} 
+                                </span>
+                                
+                              </label>
+                            </form>
+                          </div>
+<span sytle="text-altext-align: centerig;">{{ listas.data }}</span>
+
+                        <!-- Detalhes da descrição -->
+                        <details >
+                            <summary>Descrição|</summary>
+                            <p>{{ listas.descricao }}</p>
+                        </details>
+
+                        <!-- Botão de exclusão -->
+                        <form action="/delete" method="post" class="delete-form ml-3">
+                            <input type="hidden" name="lista" value="{{ listas.lista }}">
+                            <button  type="submit" class="btn btn-outline-danger">Delete</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+            {% endfor %}
+
     </div>
-</form>
- 
+</div>
+{% endblock %}
 
-  <ul class="lista">
-    {% for list in lista %}
-      <li class="item-lista">
-        <div class="checkbox-container">
-          <form action="/check" method="post" style="display:inline;">
-            <input type="hidden" name="id" value="{{ list.id }}">
-            <label>
-              <input type="checkbox" id="id" name="feita" {% if list.feita %} checked {% endif %} onchange="this.form.submit()"/>
-              <span {% if list.feita %} style="text-decoration-line: Line-through;text-decoration-color: red;"  {% endif %}>{{ list.lista }}</span>
-            </label>
-          </form>
-        </div>
-        <div class="acoes-container">
-          <form action="/delete" method="post" style="display:inline;">
-            <button class="waves-effect waves-light btn-small red" type="submit">
-              <i class="material-icons right">delete</i>deletar
-            </button>
-            <input type="hidden" name="lista" value="{{list.lista}}">
-          </form>
-          {% from 'buttons.html' import buttons %}
-          {{ buttons(lista) }}
-        </div>
-      </li>
-    {% endfor %}
-  
-</ul>
- 
-
-{% endblock %} 
