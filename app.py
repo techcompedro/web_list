@@ -1,18 +1,11 @@
 from flask import Flask, render_template, request, redirect
 from database import Lista, session, func, extract
-import datetime as dt 
+import datetime as datetime 
 app = Flask(__name__)
 
 
 @app.route('/')
 def index ():
-    if request.method == 'POST':
-        data_str = request.form.get('data')  # Recebe a data do formulário como string
-        data_obj = dt.strptime(data_str, '%Y-%m-%d').date()
-    else:
-        data_obj = None  # Defina um valor padrão se a data não for enviada
-
-        # Total de tarefas
     all_items = session.query(Lista).all()
     total = len(all_items)
 
@@ -27,9 +20,9 @@ def index ():
 @app.route('/exibir_lista', methods=['GET', 'POST'])
 def exibir_listaa():
     listas_hoje = session.query(Lista).filter(
-        extract('day', Lista.data) == dt.date.today().day,
-        extract('month', Lista.data) == dt.date.today().month,
-        extract('year', Lista.data) == dt.date.today().year
+        extract('day', Lista.data) == datetime.date.today().day,
+        extract('month', Lista.data) == datetime.date.today().month,
+        extract('year', Lista.data) == datetime.date.today().year
     ).all()
     
     if request.method == 'POST':
@@ -39,12 +32,12 @@ def exibir_listaa():
             lista = listas_hoje
         elif lista_selecionada == 'lista_mes':
             lista = session.query(Lista).filter(
-                extract('month', Lista.data) == dt.date.today().month,
-                extract('year', Lista.data) == dt.date.today().year
+                extract('month', Lista.data) == datetime.date.today().month,
+                extract('year', Lista.data) == datetime.date.today().year
             ).all()
         elif lista_selecionada == 'lista_ano':
             lista = session.query(Lista).filter(
-                extract('year', Lista.data) == dt.date.today().year
+                extract('year', Lista.data) == datetime.date.today().year
             ).all()
         else:
             lista = []
@@ -55,8 +48,13 @@ def exibir_listaa():
 
 @app.route('/adicionar_lista', methods=['POST'])
 def addlista():
-    data_str = request.form['data']
-    data_obj = dt.strptime(data_str, '%Y-%m-%d').date()
+    if request.method == 'POST':
+        data_str = request.form.get('data')  # Recebe a data do formulário como string
+        data_obj = datetime.datetime.strptime(data_str, '%Y-%m-%d')
+    else:
+        data_obj = None  # Defina um valor padrão se a data não for enviada
+
+        # Total de tarefas
     nova_lista = Lista(
         lista=request.form['lista'],
         descricao=request.form['descricao'],
